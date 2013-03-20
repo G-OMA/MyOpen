@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Role">
+
+	<typeAlias alias="Role" type="com.xxx.planeap.domain.Role" />
+    <typeAlias alias="Permission" type="com.xxx.planeap.domain.Permission"/>
+	<resultMap id="RoleResult" class="Role">
+		<result property="id" column="ID" javaType="java.lang.Integer" />
+		<result property="code" column="CODE" javaType="java.lang.String" />
+		<result property="name" column="NAME" javaType="java.lang.String" />
+		<result property="description" column="DESCRIPTION" javaType="java.lang.String" />
+		<result property="permissions" column="id" select="Role.findRolePermissions"/>
+		<result property="status" column="STATUS" javaType="java.lang.Integer" />
+		<result property="createdBy" column="CREATED_BY" javaType="java.lang.String" />
+		<result property="createdDate" column="CREATED_DATE" javaType="java.util.Date" />
+		<result property="updatedBy" column="UPDATED_BY" javaType="java.lang.String" />
+		<result property="updatedDate" column="UPDATED_DATE" javaType="java.util.Date" />
+	</resultMap>
+	<select id="findRolePermissions" parameterClass="int" resultClass="Permission">
+	    SELECT P.* FROM PERMISSIONS P
+	    WHERE P.RID = #rid#
+	</select>
+	<select id="findRoleById" resultMap="RoleResult">
+	    SELECT * FROM ROLE R
+	    WHERE R.ID = #id#
+	</select>
+    
+	<select id="findRoles" resultMap="RoleResult" parameterClass="com.xxx.common.Pager">
+		SELECT * FROM ROLE
+        LIMIT #from#,#rowCount# 
+    </select>
+    
+    <select id="findAllRoles" resultClass="com.xxx.planeap.domain.Role">
+        SELECT * FROM ROLE
+    </select>
+    
+    <select id="getCount" resultClass="java.lang.Object">
+        SELECT SUM(1) FROM ROLE
+    </select>
+
+	<insert id="saveRole" parameterClass="Role">
+		INSERT INTO ROLE(
+		   CODE,NAME,DESCRIPTION,STATUS,CREATED_BY,
+		   CREATED_DATE,UPDATED_BY,UPDATED_DATE
+		)VALUES(
+		   #code#,#name#,#description#,#status#,
+		   #createdBy#,#createdDate#,#updatedBy#,#updatedDate#
+		)
+	</insert>
+	<update id="updateRole" parameterClass="Role">
+		UPDATE ROLE SET CODE = #code#,NAME = #name#,DESCRIPTION = #description#,
+		   STATUS = #status#,UPDATED_BY = #updatedBy#,UPDATED_DATE = #updatedDate# 
+		WHERE ID = #id#
+	</update>
+	<delete id="delRoles" parameterClass="net.sf.json.JSONObject">
+	    DELETE FROM ROLE 
+	    WHERE ID = #id#
+	</delete>
+</sqlMap>

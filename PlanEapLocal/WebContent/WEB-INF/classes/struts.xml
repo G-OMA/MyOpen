@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd" >
+<struts>
+	<package name="planeap-default" extends="json-default">
+		<interceptors>
+			<interceptor name="securityInterceptor" class="securityInterceptor"/>
+			<interceptor name="myExceptionInterceptor" class="myExceptionInterceptor"/>
+			<interceptor name="myI18n" class="myI18n"/>
+			<!-- myDefaultStack instead of struts defaultStack -->
+			<interceptor-stack name="myDefaultStack">
+				<interceptor-ref name="myExceptionInterceptor"/>
+                <!-- <interceptor-ref name="exception"/> By the MyExceptionInterceptor to replace -->
+                <!-- From below,Is struts default, do not modify -->
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="myI18n"/>
+                <!-- <interceptor-ref name="i18n"/> By The I18nResolverInterceptor to replace-->
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="profiling"/>
+                <interceptor-ref name="scopedModelDriven"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="actionMappingParams"/>
+                <interceptor-ref name="params">
+                  <param name="excludeParams">dojo\..*,^struts\..*</param>
+                </interceptor-ref>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		<global-results>
+			<result name="error">/pages/error/error.jsp</result>
+			<result name="login">/pages/login.jsp</result>
+		</global-results>
+		<global-exception-mappings>
+			<exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+		</global-exception-mappings>
+		<action name="*">
+		    <result>/pages/{1}.jsp</result>
+		</action>
+	</package>
+	<include file="config/struts-planeap.xml" />
+</struts>

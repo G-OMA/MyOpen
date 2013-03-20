@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd ">
+	<description>PlanEap框架低层业务处理</description>
+	<!-- User -->
+	<bean name="userDao" class="com.xxx.planeap.dao.impl.UserDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClientTemplate" />
+	</bean>
+	<bean name="userService" class="com.xxx.planeap.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userDao" />
+	</bean>
+	<bean name="userAction" class="com.xxx.planeap.action.UserAction" scope="prototype">
+		<property name="userService" ref="userService" />
+		<property name="roleService" ref="roleService" />
+		<property name="orgUnitService" ref="orgUnitService"/>
+	</bean>
+	<!-- User -->
+	<!-- IndexAction -->
+	<bean name="indexAction" class="com.xxx.planeap.action.IndexAction" scope="prototype">
+	</bean>
+	<!-- IndexAction -->
+	<!-- Menu -->
+	<bean name="menuDao" class="com.xxx.planeap.dao.impl.MenuDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClientTemplate" />
+	</bean>
+	<bean name="menuService" class="com.xxx.planeap.service.impl.MenuServiceImpl">
+		<property name="menuDao" ref="menuDao" />
+	</bean>
+	<bean name="menuAction" class="com.xxx.planeap.action.MenuAction" scope="prototype">
+	    <property name="menuService" ref="menuService"/>
+	    <property name="functionService" ref="functionService"/>
+	</bean>
+	<!-- Menu -->
+	<!-- Role -->
+	<bean name="roleDao" class="com.xxx.planeap.dao.impl.RoleDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClientTemplate" />
+	</bean>
+	<bean name="roleService" class="com.xxx.planeap.service.impl.RoleServiceImpl">
+		<property name="roleDao" ref="roleDao" />
+	</bean>
+	<bean name="roleAction" class="com.xxx.planeap.action.RoleAction" scope="prototype">
+	    <property name="roleService" ref="roleService"/>
+	</bean>
+	<!-- Role -->
+	<!-- Grant -->
+	<bean name="grantDao" class="com.xxx.planeap.dao.impl.GrantDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClientTemplate" />
+	</bean>
+	<bean name="grantService" class="com.xxx.planeap.service.impl.GrantServiceImpl">
+		<property name="grantDao" ref="grantDao" />
+	</bean>
+	<bean name="grantAction" class="com.xxx.planeap.action.GrantAction" scope="prototype">
+	    <property name="grantService" ref="grantService"/>
+	    <property name="menuService" ref="menuService"/>
+	    <property name="roleService" ref="roleService"/>
+	</bean>
+	<!-- Grant -->
+	<!-- Function -->
+	<bean name="functionDao" class="com.xxx.planeap.dao.impl.FunctionDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClientTemplate" />
+	</bean>
+	<bean name="functionService" class="com.xxx.planeap.service.impl.FunctionServiceImpl">
+		<property name="functionDao" ref="functionDao" />
+	</bean>
+	<!-- Function -->
+	<!-- OrgUnit -->
+	<bean name="orgUnitDao" class="com.xxx.planeap.dao.impl.OrgUnitDaoImpl">
+		<property name="sqlMapClient" ref="sqlMapClientTemplate" />
+	</bean>
+	<bean name="orgUnitService" class="com.xxx.planeap.service.impl.OrgUnitServiceImpl">
+		<property name="orgUnitDao" ref="orgUnitDao" />
+	</bean>
+	<!-- OrgUnit -->
+</beans>

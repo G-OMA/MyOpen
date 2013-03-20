@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd" >
+<struts>
+    <package name="PlanEap" extends="planeap-default">
+       <!-- User -->
+       <action name="securityLogin" class="userAction" method="login">
+           <result type="json">
+              <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+       </action>
+       <action name="logout" class="userAction" method="logout">
+           <result>/pages/login.jsp</result>
+       </action>
+       <action name="saveUser" class="userAction" method="saveOrUpdUser">
+           <result type="json">
+              <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="findUserMenus" class="userAction" method="findUserMenus">
+           <result type="json">
+              <param name="root">menus</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="delUsers" class="userAction" method="delUsers">
+           <result type="json">
+              <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="lockUsers" class="userAction" method="lockUsers">
+           <result type="json">
+              <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="findUserPage" class="userAction" method="findUserPage">
+           <result>/pages/user/user_add.jsp</result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="findUsers" class="userAction" method="findUsers">
+           <result name="toPage">/pages/user/users.jsp</result>
+           <result type="json">
+               <param name="root">pager</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       
+       
+       
+       
+       
+       <action name="findIndex" class="indexAction">
+           <result>/pages/index.jsp</result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <!-- Menu -->
+       
+       <action name="findMenuPage" class="menuAction">
+           <result>/pages/menu/menu_add.jsp</result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="findMenu" class="menuAction" method="findMenuByPid">
+           <result>/pages/menu/menu.jsp</result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="findMenuByPid" class="menuAction" method="findMenuByPid">
+           <result type="json">
+              <param name="root">menus</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="saveOrUpdate" class="menuAction" method="saveOrUpdateMenu">
+           <result type="json">
+              <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="delMenu" class="menuAction" method="delMenu">
+           <result type="json">
+              <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="moveMenu" class="menuAction" method="moveMenu">
+           <result type="json">
+              <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <!-- Role -->
+       <action name="findRolePage" class="roleAction" method="findRoles">
+           <result>/pages/role/roles.jsp</result>
+           <interceptor-ref name="securityInterceptor"/>
+           <interceptor-ref name="myDefaultStack"/>
+       </action>
+       <action name="findRoles" class="roleAction" method="findRoles">
+           <result type="json">
+               <param name="root">pager</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="delRoles" class="roleAction" method="delRoles">
+           <result type="json">
+               <param name="delRoles"></param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="saveRole" class="roleAction" method="saveRole">
+           <result type="json">
+               <param name="root">executeResult</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <!-- Grant -->
+       <action name="grantFind" class="grantAction" method="grantFind">
+           <result>/pages/role/grant.jsp</result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="grantFindChild" class="grantAction" method="grantFind">
+           <result type="json">
+               <param name="root">menus</param>
+           </result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+       <action name="grantSave" class="grantAction" method="grantSave">
+           <result type="json"></result>
+           <interceptor-ref name="myDefaultStack"/>
+           <interceptor-ref name="securityInterceptor"/>
+       </action>
+    </package>
+</struts>

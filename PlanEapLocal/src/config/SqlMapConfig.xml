@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN" 
+          "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings lazyLoadingEnabled="true" useStatementNamespaces="true" />
+	<sqlMap resource="com/xxx/planeap/domain/UserMap.xml"/>
+	<sqlMap resource="com/xxx/planeap/domain/MenuMap.xml"/>
+	<sqlMap resource="com/xxx/planeap/domain/RoleMap.xml"/>
+	<sqlMap resource="com/xxx/planeap/domain/FunctionMap.xml"/>
+	<sqlMap resource="com/xxx/planeap/domain/PermissionMap.xml"/>
+	<sqlMap resource="com/xxx/planeap/domain/OrgUnitMap.xml"/>
+</sqlMapConfig>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="User">
+	<typeAlias alias="User" type="com.xxx.planeap.domain.User"/>
+	<typeAlias alias="Role" type="com.xxx.planeap.domain.Role"/>
+	<typeAlias alias="Menu" type="com.xxx.planeap.domain.Menu"/>
+	<typeAlias alias="OrgUnit" type="com.xxx.planeap.domain.OrgUnit"/>
+    <typeAlias alias="Permission" type="com.xxx.planeap.domain.Permission"/>
+	
+	<resultMap id="UserResult" class="User">
+		<result property="id" column="ID" javaType="java.lang.Integer"/>
+		<result property="code" column="CODE" javaType="java.lang.String"/>
+		<result property="name" column="NAME" javaType="java.lang.String" />
+		<result property="userName" column="USER_NAME" javaType="java.lang.String" />
+		<result property="password" column="PASSWORD" javaType="java.lang.String" />
+		<result property="email" column="EMAIL" javaType="java.lang.String"/>
+		<result property="status" column="STATUS" javaType="java.lang.Integer"/>
+		<result property="expire" column="EXPIRE" javaType="java.util.Date"/>
+		<result property="roles" column="id" select="User.findUserRoles"/>
+		<result property="orgUnits" column="id" select="User.findOrgUnits"/>
+	</resultMap>
+	<resultMap id="RoleResult" class="Role">
+		<result property="id" column="ID" javaType="java.lang.Integer" />
+		<result property="code" column="CODE" javaType="java.lang.String" />
+		<result property="name" column="NAME" javaType="java.lang.String" />
+		<result property="description" column="DESCRIPTION" javaType="java.lang.String" />
+		<result property="permissions" column="id" select="User.findRolePermissions"/>
+		<result property="status" column="STATUS" javaType="java.lang.Integer" />
+		<result property="createdBy" column="CREATED_BY" javaType="java.lang.String" />
+		<result property="createdDate" column="CREATED_DATE" javaType="java.util.Date" />
+		<result property="updatedBy" column="UPDATED_BY" javaType="java.lang.String" />
+		<result property="updatedDate" column="UPDATED_DATE" javaType="java.util.Date" />
+	</resultMap>
+	
+	
+	<resultMap id="MenuResult" class="Menu">
+		<result property="id" column="ID" javaType="java.lang.Integer" />
+		<result property="name" column="NAME" javaType="java.lang.String" />
+		<result property="enName" column="EN_NAME" javaType="java.lang.String" />
+		<result property="description" column="DESCRIPTION" javaType="java.lang.String" />
+		<result property="homeUrl" column="HOME_URL" javaType="java.lang.String" />
+		<result property="action" column="ACTION" javaType="java.lang.String" />
+		<result property="type" column="TYPE" javaType="java.lang.Integer" />
+		<result property="idx" column="IDX" javaType="java.lang.Integer" />
+		<result property="pid" column="PID" javaType="java.lang.Integer" />
+		<result property="children" column="id" select="Menu.findMenuByPid"/>
+		<result property="funs" column="id" select="Menu.findFunByMid"/>
+	</resultMap>
+	
+	
+	<select id="findRolePermissions" parameterClass="int" resultClass="Permission">
+	    SELECT P.*,M.ACTION ,F.EXPRESSION FROM PERMISSIONS P,MENU M,FUNCTION F
+	    WHERE P.MID = M.ID AND P.FID = F.ID AND P.RID = #rid#
+	</select>
+    <select id="findUserRoles" parameterClass="int" resultMap="RoleResult">
+        SELECT R.* FROM USERROLES UR,ROLE R
+        WHERE UR.RID = R.ID
+        AND UR.UID = #id#
+    </select>
+    <select id="findOrgUnits" parameterClass="int" resultClass="OrgUnit">
+        SELECT O.* FROM USERORGUNITS U,ORGUNIT O
+        WHERE U.OID = O.ID AND U.UID = #id#
+    </select>
+    <select id="findUserModules" parameterClass="int" resultMap="MenuResult">
+        SELECT DISTINCT M.* FROM USER U,USERROLES UR,PERMISSIONS P,MENU M
+        WHERE U.ID = UR.UID AND UR.RID = P.RID AND P.MID = M.ID 
+        AND U.ID = #id# ORDER BY M.IDX ASC
+    </select>
+    
+	<select id="findUsers" resultMap="UserResult" parameterClass="com.xxx.common.Pager">
+		SELECT * FROM USER
+		LIMIT #from#,#rowCount#
+    </select>
+
+	<select id="findUserByName" parameterClass="String" resultMap="UserResult">
+		select * from USER
+		where NAME = #name#
+    </select>
+    
+    <select id="findUserById" resultMap="UserResult">
+        SELECT * FROM USER 
+        WHERE ID = #id#
+    </select>
+    
+    <select id="getCount" resultClass="int">
+        SELECT SUM(1) FROM USER
+    </select>
+    
+    <insert id="saveUser" parameterClass="User">
+        INSERT INTO USER(CODE,USER_NAME,PASSWORD,NAME,EMAIL,STATUS,EXPIRE)
+        VALUES(#code#,#userName#,#password#,#name#,#email#,#status#,#expire#)
+        <selectKey resultClass="int" keyProperty="id" >
+            SELECT @@IDENTITY AS id
+        </selectKey>
+    </insert>
+    <insert id="saveUserRole" parameterClass="java.util.Map">
+        INSERT INTO USERROLES(UID,RID) VALUES(#uid#,#rid#)
+    </insert>
+    <insert id="saveUserUnit" parameterClass="java.util.Map">
+        INSERT INTO USERORGUNITS(UID,OID) VALUES(#uid#,#oid#)
+    </insert>
+    
+    <update id="updateUser" parameterClass="User">
+        UPDATE USER SET CODE = #code#,USER_NAME = #userName#,PASSWORD = #password#,
+        NAME = #name#,EMAIL = #email#,STATUS = #status#,EXPIRE = #expire#
+        WHERE ID = #id#
+    </update>
+    
+    <delete id="delUserRole" parameterClass="int">
+        DELETE FROM USERROLES WHERE UID = #uid#
+    </delete>
+    <delete id="delUserUnit" parameterClass="int">
+        DELETE FROM USERORGUNITS WHERE UID = #uid#
+    </delete>
+    
+    <delete id="delUsers" parameterClass="int">
+        DELETE FROM USER WHERE ID = #id#
+    </delete>
+    <update id="lockUsers" parameterClass="int">
+        UPDATE USER SET STATUS = 0 WHERE ID = #id#
+    </update>
+</sqlMap>

@@ -1,0 +1,36 @@
+@CHARSET "UTF-8";
+
+input{
+	vertical-align: middle;
+}
+/**
+.row {
+	margin: 15px;
+}
+
+.columnTitle {
+	margin-top: 5px;
+	margin-left: 40px;
+	display: block;
+	float: left;
+	width: 70px;
+	height: 30px;
+	vertical-align: bottom;
+}
+
+.columnContent {
+	margin-top: 5px;
+	display: block;
+	float: left;
+	width: 120px;
+	height: 30px;
+	vertical-align: bottom;
+}**/
+
+.rightDown {
+	background: url('../img/right-down.png') no-repeat;
+}
+
+.readOnly {
+	background-color: #EBEBEB;
+}

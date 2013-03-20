@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Menu">
+	<typeAlias alias="Menu" type="com.xxx.planeap.domain.Menu" />
+	<resultMap id="MenuResult" class="Menu">
+		<result property="id" column="ID" javaType="java.lang.Integer" />
+		<result property="name" column="NAME" javaType="java.lang.String" />
+		<result property="enName" column="EN_NAME" javaType="java.lang.String" />
+		<result property="description" column="DESCRIPTION" javaType="java.lang.String" />
+		<result property="homeUrl" column="HOME_URL" javaType="java.lang.String" />
+		<result property="action" column="ACTION" javaType="java.lang.String" />
+		<result property="type" column="TYPE" javaType="java.lang.Integer" />
+		<result property="idx" column="IDX" javaType="java.lang.Integer" />
+		<result property="pid" column="PID" javaType="java.lang.Integer" />
+		<result property="children" column="id" select="Menu.findMenuByPid"/>
+		<result property="funs" column="id" select="Menu.findFunByMid"/>
+		<result property="createDate" column="CREATE_DATE" javaType="java.util.Date" />
+		<result property="createBy" column="CREATE_BY" javaType="java.lang.String" />
+		<result property="modifyDate" column="MODIFY_DATE" javaType="java.util.Date" />
+		<result property="modifyBy" column="MODIFY_BY" javaType="java.lang.String" />
+	</resultMap>
+	<!-- 更新 原父节点下子节点IDX -->
+	<update id="upIdxBetween" parameterClass="java.util.Map">
+		UPDATE MENU SET IDX = IDX-#interval# 
+		WHERE IDX BETWEEN #startIdx# AND #endIdx# AND PID = #pid#
+	</update>
+	<update id="upIdxEnd" parameterClass="java.util.Map">
+		UPDATE MENU SET IDX = IDX-#interval# 
+		WHERE IDX > #startIdx# AND PID = #pid#
+	</update>
+    <!-- 更新 目标节点下子节点IDX -->
+    <update id="updateTargetMoveIdx" parameterClass="java.util.Map">
+        UPDATE MENU SET IDX = IDX + #interval# 
+        WHERE IDX >= #idx# AND PID = #pid#
+    </update>
+    <!-- 更新待移动节点的PID及IDX -->
+	<update id="updateNodes" parameterClass="java.util.Map">
+		UPDATE MENU SET
+		PID = #pid#,IDX = #idx#
+		WHERE ID = #id#
+    </update>
+	<!-- 查询指定父节点的子节点 -->
+	<select id="findMenuByPid" resultMap="MenuResult">
+	    SELECT * FROM MENU WHERE PID = #pid#
+	    ORDER BY IDX ASC
+	</select>
+	<!-- 通过菜单ID，查询菜单 -->
+	<select id="findMenuByID" resultMap="MenuResult">
+	    SELECT * FROM MENU WHERE ID = #id#
+	    ORDER BY IDX ASC
+	</select>
+	<!-- 通过菜单ID，查询菜单功能 -->
+	<select id="findFunByMid" parameterClass="int" resultClass="com.xxx.planeap.domain.Function">
+	    SELECT F.* FROM MENUFUNCTION MF,FUNCTION F
+	    WHERE MF.FID = F.ID
+	    AND MF.MID = #mid#
+	</select>
+	
+	<!-- 创建菜单 -->
+    <insert id="addMenu" parameterClass="Menu">
+        INSERT INTO MENU(NAME,EN_NAME,DESCRIPTION,HOME_URL,ACTION,
+           IDX,PID,TYPE,CREATE_DATE,CREATE_BY,MODIFY_DATE,
+           MODIFY_BY) 
+        VALUES(#name#,#enName#,#description#,#homeUrl#,
+           #action#,#idx#,#pid#,#type#,#createBy#,#createDate#,
+           #modifyBy#,#modifyDate# )
+        <selectKey resultClass="int" keyProperty="id" >
+            SELECT @@IDENTITY AS id
+        </selectKey>
+    </insert>
+    <!-- 更新菜单 -->
+    <update id="updateMenu" parameterClass="Menu">
+        UPDATE MENU SET NAME = #name#,EN_NAME = #enName#,DESCRIPTION = #description#,
+        ACTION = #action#,TYPE = #type#,HOME_URL = #homeUrl#  WHERE ID = #id#
+    </update>
+    <!-- 通过菜单ID删除菜单 -->
+    <delete id="delMenu" parameterClass="int">
+        DELETE FROM MENU WHERE ID = #id# OR PID = #id#
+    </delete>
+    
+    <insert id="addMenuFuns" parameterClass="java.util.Map">
+        INSERT INTO MENUFUNCTION(FID,MID)
+        VALUES(#fid#,#mid#)
+    </insert>
+    <delete id="delMenuFuns" parameterClass="int">
+        DELETE FROM MENUFUNCTION 
+        WHERE MID = #mid#
+    </delete>
+    <select id="findMenuFuns" resultClass="java.lang.String">
+        SELECT FID FROM MENUFUNCTION 
+        WHERE MID = #mid#
+    </select>
+</sqlMap>

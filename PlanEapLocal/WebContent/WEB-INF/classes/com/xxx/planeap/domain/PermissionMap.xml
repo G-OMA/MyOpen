@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Permission">
+	<typeAlias alias="Permission" type="com.xxx.planeap.domain.Permission"/>
+	<delete id="delPermission" parameterClass="net.sf.json.JSONObject">
+	    DELETE FROM PERMISSIONS
+	    WHERE RID = #rid# AND MID = #mid#
+	</delete>
+	<insert id="savePermission" parameterClass="java.util.Map">
+	    INSERT INTO PERMISSIONS(RID,MID,FID) VALUES(#rid#,#mid#,#fid#)
+	</insert>
+	<delete id="delPermissionByRid">
+	    DELETE FROM PERMISSIONS 
+	    WHERE RID = #rid#
+	</delete>
+</sqlMap>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd ">
+
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="runClassMethod1"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject" ref="Spring管理生成的实例名" />
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod" value="类中的方法名" />
+	</bean>
+	<!-- 定义触发器 -->
+	<bean id="trigger1" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<!-- 确定任务调度的目标任务  -->
+		<property name="jobDetail" ref="runClassMethod1" />
+		<!-- 每天中午12点和晚上23点执行-->
+		<property name="cronExpression" value="0 0 11,23 * * ?" />
+	</bean>
+
+
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="runClassMethod2"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject" ref="Spring生成的实例名" />
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod" value="类中的方法名" />
+	</bean>
+	<!-- 定义触发器 -->
+	<bean id="trigger2" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<!-- 确定任务调度的目标任务  -->
+		<property name="jobDetail" ref="runClassMethod2" />
+		<!-- cron表达式 -->
+		<!-- 每月的4号23点执行 自动 runClassMethod2 -->
+		<property name="cronExpression" value="0 0 23 4 * ?" />
+	</bean>
+	<!-- 建立实际调度 -->
+	<bean id="startQuertz"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<!-- 指定调度使用的触发器列表 -->
+		<property name="triggers">
+			<list>
+				<ref bean="trigger1" />
+				<ref bean="trigger2" />
+			</list>
+		</property>
+	</bean>
+</beans>
